@@ -1,0 +1,46 @@
+# secrets - never commit these
+*.pfx
+*.pem
+*.key
+*.publishsettings
+.env
+.env.*
+local.settings.json
+appsettings.*.json
+secrets.json
+*credentials*.json
+*credentials*.yaml
+*credentials*.yml
+*.secret
+*callback*.txt
+
+# terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+crash.log
+
+# azure
+.azure/
+*.azurePubxml
+
+# notebooks
+.ipynb_checkpoints/
+
+# tooling
+.vscode/
+.idea/
+__pycache__/
+*.pyc
+node_modules/
+
+# os
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# scratch
+scratch/
+tmp/
+*.tmp
