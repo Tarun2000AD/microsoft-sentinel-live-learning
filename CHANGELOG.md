@@ -12,7 +12,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Every step folder has a written `README.md` — goal, concepts, portal click-path,
   CLI / IaC, a Validate block with expected output, common mistakes, and Learn links.
 - `STEP-LOG-TEMPLATE.md`, `DETECTION-TEMPLATE.md`, `HUNT-TEMPLATE.md` in `_templates/`.
-- Structure-check GitHub Action: every step folder has a README, no obvious secrets.
+- Structure-check workflow in [`ci/`](ci/README.md) (move it to `.github/workflows/`
+  to enable): every step folder has a README, numbering 00–62 is gap-free, no obvious secrets.
 
 ### Status
 
