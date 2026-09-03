@@ -154,7 +154,10 @@ of them through "scheduled KQL" would make several of them impossible or terribl
 5. Open one **Microsoft Security** rule template → note it has **no query** — just product /
    severity / name filters.
 
-## 🧪 Validate
+## 💻 Do it — CLI / IaC
+
+This step is inventory, not deployment — the CLI is for *reading* the current rule and template
+state. Authoring rules as code starts in [step 28](../28-analytics-rules-as-code/README.md).
 
 ```bash
 # how many templates of each kind ship / were installed
@@ -168,6 +171,19 @@ az sentinel alert-rule template list -g rg-sentinel-lab --workspace-name law-sen
 az sentinel alert-rule list -g rg-sentinel-lab --workspace-name law-sentinel-lab \
   --query "[?enabled].{name:displayName, kind:kind}" -o table
 ```
+
+```bash
+# one template's requiredDataConnectors — the prerequisite check the wizard does for you
+az sentinel alert-rule template list -g rg-sentinel-lab --workspace-name law-sentinel-lab \
+  --query "[?kind=='Scheduled'] | [0].{name:displayName, needs:requiredDataConnectors[].connectorId}"
+```
+
+In an ARM/Bicep template, the `kind` field on `Microsoft.SecurityInsights/alertRules` is what
+selects the type (`Scheduled` / `NRT` / `MicrosoftSecurityIncidentCreation` / `Fusion` /
+`MLBehaviorAnalytics` / `ThreatIntelligence`) and it changes which `properties` are valid — see the
+[alertRules ARM reference](https://learn.microsoft.com/en-us/azure/templates/microsoft.securityinsights/alertrules).
+
+## 🧪 Validate
 
 ```kusto
 // what has actually produced alerts (little/nothing until step 18)
