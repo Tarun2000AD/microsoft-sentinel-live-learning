@@ -178,7 +178,7 @@ resource vip 'Microsoft.SecurityInsights/watchlists@2024-09-01' = {
 ```
 </details>
 
-## 🖱️ Use it — severity escalation
+### Use a watchlist in a rule — severity escalation
 
 ```kusto
 let vips = _GetWatchlist('VIPUsers')
@@ -196,7 +196,7 @@ In the rule wizard: **Set rule logic → Alert details → Severity column** = `
 `Account` → `Name` = `UserPrincipalName`. Now a VIP's failures raise a **High**, a normal user's a
 **Medium**.
 
-## 🖱️ Use it — allowlist
+### Use a watchlist in a rule — allowlist
 
 ```kusto
 let allow = _GetWatchlist('KnownBadIPs')
