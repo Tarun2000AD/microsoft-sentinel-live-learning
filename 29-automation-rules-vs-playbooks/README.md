@@ -134,6 +134,30 @@ playbook serve many detections via one automation rule.
 4. **Automation → the (empty) list** — note there is *already* one system automation rule if XDR
    sync is on. Read its conditions.
 
+## 💻 Do it — CLI / IaC
+
+This step is orientation — the CLI here is for *reading* what exists. Building automation rules and
+playbooks as code is [step 35](../35-automation-rules-triage/README.md) and
+[step 38](../38-playbooks-as-code/README.md).
+
+```bash
+RG=rg-sentinel-lab; WS=law-sentinel-lab
+
+# automation rules present (incl. any system rule from XDR sync)
+az sentinel automation-rule list -g $RG --workspace-name $WS \
+  --query "[].{name:displayName, order:order, trigger:triggeringLogic.triggersWhen, enabled:triggeringLogic.isEnabled}" -o table
+
+# playbooks are Logic Apps in the resource group
+az resource list -g $RG --resource-type Microsoft.Logic/workflows \
+  --query "[].{name:name, state:properties.state}" -o table
+
+# is the Sentinel SP allowed to run playbooks in this RG?
+az role assignment list -g $RG --query "[?roleDefinitionName=='Microsoft Sentinel Automation Contributor']" -o table
+```
+
+The resource types you'll deploy later: `Microsoft.SecurityInsights/automationRules` (the router)
+and `Microsoft.Logic/workflows` (the worker).
+
 ## 🧪 Validate — the decision quiz
 
 Answer in `LOG.md` **with reasoning** (understanding is this step's deliverable):
