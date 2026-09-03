@@ -168,6 +168,30 @@ SigninLogs
 | where Failures >= 8                                        // rung 2: threshold
 ```
 
+## 💻 Do it — CLI / IaC
+
+Tuning is editing the rule's `query` (and sometimes `triggerThreshold` / grouping). Keep each tuned
+version in `artifacts/` so the change history is real, not just "trust me it's better".
+
+```bash
+RG=rg-sentinel-lab; WS=law-sentinel-lab
+RULE_ID=$(az sentinel alert-rule list -g $RG --workspace-name $WS \
+  --query "[?contains(displayName,'NOISY')].name" -o tsv)
+
+# save the tuned KQL, then push it onto the existing rule (in place — same rule-id, not a new rule)
+cp /dev/stdin artifacts/noisy-signin-tuned-v3.kql <<'KQL'
+<paste the rung 1+2+3 query here>
+KQL
+
+az sentinel alert-rule update -g $RG --workspace-name $WS --rule-id "$RULE_ID" \
+  --scheduled-alert-rule query="$(python -c 'import json;print(json.dumps(open("artifacts/noisy-signin-tuned-v3.kql").read())[1:-1])')" \
+  --scheduled-alert-rule trigger-threshold=0
+```
+
+Commit `artifacts/noisy-signin-tuned-v{1,2,3}.kql` so the tuning ladder is visible in `git log`.
+Rung 4 (auto-close) is an **automation rule**, deployed separately — see
+[step 28](../28-analytics-rules-as-code/README.md) and [step 35](../35-automation-rules-triage/README.md).
+
 ## 🧪 Validate
 
 Keep a tuning table in `LOG.md`:
